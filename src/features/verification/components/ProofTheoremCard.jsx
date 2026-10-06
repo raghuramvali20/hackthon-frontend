@@ -1,0 +1,14 @@
+export function ProofTheoremCard({ theorem }) {
+  const isSatisfied = theorem?.status === 'PROVED_SATISFIED'
+  return (
+    <article className="rounded-xl border border-line p-4">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <h3 className="font-semibold">{theorem?.theorem || 'Unnamed verification check'}</h3>
+        <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${isSatisfied ? 'bg-emerald-50 text-good' : 'bg-amber-50 text-warn'}`}>
+          {theorem?.status || 'NO STATUS'}
+        </span>
+      </div>
+      <p className="mt-3 text-sm leading-6 text-muted">{theorem?.proof || 'No check details supplied.'}</p>
+    </article>
+  )
+}
