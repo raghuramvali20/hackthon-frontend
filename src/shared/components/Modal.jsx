@@ -22,7 +22,7 @@ export function Modal({ open, title, onClose, children }) {
       <section
         aria-labelledby="modal-title"
         aria-modal="true"
-        className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl"
+        className="w-full max-w-lg rounded-2xl border border-line bg-surface p-6 text-ink shadow-xl"
         role="dialog"
       >
         <div className="mb-4 flex items-center justify-between gap-4">

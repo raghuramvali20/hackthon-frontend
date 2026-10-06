@@ -1,8 +1,12 @@
-import { statusStyles } from '../styles/theme.js'
-
 export function Badge({ children, status, className = '' }) {
   const label = children || status || 'UNVERIFIED'
-  const style = statusStyles[status || label] || statusStyles.UNVERIFIED
+  const styles = {
+    FORMALLY_VERIFIED: 'bg-good/10 text-good ring-good/20',
+    PARTIAL_VERIFICATION: 'bg-warn/10 text-warn ring-warn/20',
+    UNVERIFIED: 'bg-hover text-muted ring-line',
+    ERROR: 'bg-danger/10 text-danger ring-danger/20',
+  }
+  const style = styles[status || label] || styles.UNVERIFIED
 
   return (
     <span

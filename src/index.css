@@ -1,11 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --color-canvas: #f5f7fb;
+  --color-canvas: #f4f6fb;
   --color-surface: #ffffff;
-  --color-ink: #172033;
-  --color-muted: #64718a;
-  --color-line: #e2e8f0;
+  --color-raised: #ffffff;
+  --color-subtle: #f8f9fc;
+  --color-hover: #f0f2f8;
+  --color-ink: #182238;
+  --color-muted: #68758d;
+  --color-line: #e3e8f1;
   --color-brand: #5146e5;
   --color-brand-dark: #3930b5;
   --color-good: #16845b;
@@ -17,6 +20,7 @@
 }
 
 :root {
+  color-scheme: light;
   font-family: var(--font-sans);
   color: var(--color-ink);
   background: var(--color-canvas);
@@ -25,6 +29,25 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-optical-sizing: auto;
+  --shadow-card: 0 2px 8px rgb(20 32 60 / 4%), 0 14px 36px rgb(20 32 60 / 4%);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-canvas: #0c101a;
+  --color-surface: #121927;
+  --color-raised: #182131;
+  --color-subtle: #151e2c;
+  --color-hover: #202b3c;
+  --color-ink: #edf2fb;
+  --color-muted: #9aa8bd;
+  --color-line: #283549;
+  --color-brand: #a39aff;
+  --color-brand-dark: #887cf3;
+  --color-good: #59d2a1;
+  --color-warn: #f3bd69;
+  --color-danger: #ff8793;
+  --shadow-card: 0 2px 8px rgb(0 0 0 / 16%), 0 18px 44px rgb(0 0 0 / 14%);
 }
 
 * {
@@ -35,6 +58,10 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
+  background:
+    radial-gradient(ellipse at 88% 0%, rgb(99 102 241 / 6%), transparent 36rem),
+    var(--color-canvas);
+  transition: background-color 180ms ease, color 180ms ease;
 }
 
 button,
@@ -54,6 +81,51 @@ a {
 }
 
 :focus-visible {
-  outline: 3px solid #8780ff;
+  outline: 3px solid var(--color-brand);
   outline-offset: 3px;
+}
+
+button,
+a,
+input,
+textarea,
+section,
+header,
+aside {
+  transition-property: color, background-color, border-color, box-shadow;
+  transition-duration: 160ms;
+}
+
+input,
+textarea {
+  color: var(--color-ink);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-muted);
+}
+
+.card-elevated {
+  box-shadow: var(--shadow-card);
+}
+
+:root[data-theme='dark'] .button-primary {
+  background-color: #574ce2;
+  color: #ffffff;
+}
+
+:root[data-theme='dark'] .button-primary:hover:not(:disabled) {
+  background-color: #6a60ee;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -1,16 +1,16 @@
 export const statusStyles = {
-  FORMALLY_VERIFIED: 'bg-emerald-50 text-good ring-emerald-200',
-  PARTIAL_VERIFICATION: 'bg-amber-50 text-warn ring-amber-200',
-  UNVERIFIED: 'bg-slate-100 text-muted ring-slate-200',
-  ERROR: 'bg-rose-50 text-danger ring-rose-200',
+  FORMALLY_VERIFIED: 'bg-good/10 text-good ring-good/20',
+  PARTIAL_VERIFICATION: 'bg-warn/10 text-warn ring-warn/20',
+  UNVERIFIED: 'bg-hover text-muted ring-line',
+  ERROR: 'bg-danger/10 text-danger ring-danger/20',
 }
 
 export const buttonStyles = {
   primary:
-    'bg-brand text-white hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-50',
+    'bg-brand text-white shadow-sm shadow-brand/20 hover:-translate-y-0.5 hover:bg-brand-dark hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0',
   secondary:
-    'border border-line bg-white text-ink hover:border-brand hover:text-brand disabled:cursor-not-allowed disabled:opacity-50',
+    'border border-line bg-surface text-ink hover:border-brand hover:text-brand disabled:cursor-not-allowed disabled:opacity-50',
   danger:
-    'bg-rose-50 text-danger hover:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-50',
-  ghost: 'text-muted hover:bg-slate-100 hover:text-ink',
+    'bg-danger/10 text-danger hover:bg-danger/20 disabled:cursor-not-allowed disabled:opacity-50',
+  ghost: 'text-muted hover:bg-hover hover:text-ink',
 }

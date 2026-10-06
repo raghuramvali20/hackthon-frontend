@@ -10,7 +10,7 @@ export function CodeDiff({ originalCode = '', repairedCode = '' }) {
 function CodePanel({ title, code }) {
   return (
     <section className="min-w-0 overflow-hidden rounded-xl border border-line">
-      <h3 className="border-b border-line bg-slate-50 px-4 py-3 text-sm font-semibold">
+      <h3 className="border-b border-line bg-subtle px-4 py-3 text-sm font-semibold">
         {title}
       </h3>
       <pre className="max-h-[32rem] overflow-auto bg-slate-950 p-4 text-xs leading-6 text-slate-100">

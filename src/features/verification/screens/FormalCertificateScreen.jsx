@@ -26,7 +26,7 @@ export function FormalCertificateScreen() {
           <CertificateBadge status={certificate.verificationStatus} />
         </div>
       </div>
-      <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
+      <div className="rounded-xl border border-warn/30 bg-warn/10 p-4 text-sm leading-6 text-warn">
         This certificate reflects the backend’s automated checks. The current backend does not provide a mathematically verified proof or a public hash verification endpoint.
       </div>
       <Card className="space-y-5 p-5 sm:p-6">

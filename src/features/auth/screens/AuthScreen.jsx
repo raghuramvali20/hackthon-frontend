@@ -4,6 +4,7 @@ import { useAuth } from '../controllers/AuthContext.js'
 import { Button } from '../../../shared/components/Button.jsx'
 import { Card } from '../../../shared/components/Card.jsx'
 import { Navbar } from '../../../shared/components/Navbar.jsx'
+import { ThemeToggle } from '../../../shared/components/ThemeToggle.jsx'
 
 export function AuthScreen({ mode = 'login' }) {
   const isRegister = mode === 'register'
@@ -32,8 +33,11 @@ export function AuthScreen({ mode = 'login' }) {
   }
 
   return (
-    <main className="grid min-h-screen place-items-center bg-canvas px-4 py-10">
-      <div className="w-full max-w-md">
+    <main className="relative grid min-h-screen place-items-center overflow-hidden bg-canvas px-4 py-10">
+      <div aria-hidden="true" className="pointer-events-none absolute -left-40 -top-40 size-[32rem] rounded-full bg-brand/10 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -bottom-48 -right-40 size-[34rem] rounded-full bg-violet-400/10 blur-3xl" />
+      <div className="absolute right-5 top-5 z-20"><ThemeToggle /></div>
+      <div className="relative w-full max-w-md">
         <div className="mb-8 flex justify-center"><Navbar /></div>
         <Card className="p-7 sm:p-9">
           <p className="text-sm font-semibold text-brand">YOUR ACCESSIBILITY WORKSPACE</p>
@@ -49,7 +53,7 @@ export function AuthScreen({ mode = 'login' }) {
                 Name
                 <input
                   autoComplete="name"
-                  className="mt-1.5 w-full rounded-xl border border-line bg-white px-3 py-2.5"
+                  className="mt-1.5 w-full rounded-xl border border-line bg-surface px-3 py-2.5"
                   maxLength={120}
                   onChange={(event) => setForm({ ...form, name: event.target.value })}
                   required
@@ -61,7 +65,7 @@ export function AuthScreen({ mode = 'login' }) {
               Email
               <input
                 autoComplete="email"
-                className="mt-1.5 w-full rounded-xl border border-line bg-white px-3 py-2.5"
+                className="mt-1.5 w-full rounded-xl border border-line bg-surface px-3 py-2.5"
                 onChange={(event) => setForm({ ...form, email: event.target.value })}
                 required
                 type="email"
@@ -72,7 +76,7 @@ export function AuthScreen({ mode = 'login' }) {
               Password
               <input
                 autoComplete={isRegister ? 'new-password' : 'current-password'}
-                className="mt-1.5 w-full rounded-xl border border-line bg-white px-3 py-2.5"
+                className="mt-1.5 w-full rounded-xl border border-line bg-surface px-3 py-2.5"
                 minLength={isRegister ? 8 : undefined}
                 onChange={(event) => setForm({ ...form, password: event.target.value })}
                 required
@@ -81,7 +85,7 @@ export function AuthScreen({ mode = 'login' }) {
               />
               {isRegister && <span className="mt-1 block text-xs text-muted">At least 8 characters.</span>}
             </label>
-            {error && <p className="rounded-lg bg-rose-50 p-3 text-sm text-danger" role="alert">{error}</p>}
+            {error && <p className="rounded-lg bg-danger/10 p-3 text-sm text-danger" role="alert">{error}</p>}
             <Button className="w-full" disabled={isSubmitting} type="submit">
               {isSubmitting ? 'Please wait…' : isRegister ? 'Create account' : 'Sign in'}
             </Button>

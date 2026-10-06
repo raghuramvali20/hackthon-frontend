@@ -8,3 +8,14 @@ export function getImprovement(report) {
   if (!Number.isFinite(before) || !Number.isFinite(after)) return null
   return after - before
 }
+
+export function getReportLabel(report) {
+  const readableText = String(report?.originalCode || '')
+    .replace(/<!--[\s\S]*?-->/g, ' ')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+  return readableText
+    ? readableText.slice(0, 64)
+    : `Accessibility scan · ${getReportId(report).slice(-8)}`
+}

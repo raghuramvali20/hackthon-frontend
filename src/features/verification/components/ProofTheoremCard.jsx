@@ -4,7 +4,7 @@ export function ProofTheoremCard({ theorem }) {
     <article className="rounded-xl border border-line p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <h3 className="font-semibold">{theorem?.theorem || 'Unnamed verification check'}</h3>
-        <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${isSatisfied ? 'bg-emerald-50 text-good' : 'bg-amber-50 text-warn'}`}>
+        <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${isSatisfied ? 'bg-good/10 text-good' : 'bg-warn/10 text-warn'}`}>
           {theorem?.status || 'NO STATUS'}
         </span>
       </div>

@@ -1,31 +1,53 @@
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { useAuth } from '../../features/auth/controllers/AuthContext.js'
 import { Button } from '../components/Button.jsx'
 import { Navbar } from '../components/Navbar.jsx'
+import { ThemeToggle } from '../components/ThemeToggle.jsx'
 
 export function AppHeader() {
   const { user, logout } = useAuth()
   return (
-    <header className="sticky top-0 z-20 border-b border-line bg-white/95 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+    <header className="sticky top-0 z-30 border-b border-line bg-surface/90 shadow-sm backdrop-blur-xl">
+      <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-3 sm:px-6 lg:px-8">
         <Navbar />
-        <nav aria-label="Main navigation" className="hidden items-center gap-1 sm:flex">
-          <NavLink to="/audit">New scan</NavLink>
-          <NavLink to="/reports">Reports</NavLink>
+        <nav aria-label="Main navigation" className="order-3 flex w-full items-center gap-2 border-t border-line pt-2 sm:order-none sm:w-auto sm:border-0 sm:pt-0">
+          <NavItem to="/audit">New scan</NavItem>
+          <NavItem to="/reports">Reports</NavItem>
         </nav>
-        <div className="flex items-center gap-3">
-          <span className="hidden max-w-32 truncate text-sm text-muted md:inline">{user?.name}</span>
-          <Button onClick={logout} variant="secondary">Sign out</Button>
+        <div className="ml-auto flex items-center gap-2">
+          <ThemeToggle />
+          <span aria-hidden="true" className="grid size-9 place-items-center rounded-full bg-brand/10 text-sm font-bold text-brand">
+            {user?.name?.trim()?.charAt(0)?.toUpperCase() || 'U'}
+          </span>
+          <span className="hidden max-w-36 truncate text-sm font-semibold text-ink md:inline">{user?.name}</span>
+          <Button
+            aria-label="Sign out"
+            className="size-9 min-h-9 !p-0"
+            onClick={logout}
+            size="sm"
+            title="Sign out"
+            type="button"
+            variant="secondary"
+          >
+            <svg aria-hidden="true" fill="none" height="18" viewBox="0 0 24 24" width="18">
+              <path d="M10 17l5-5-5-5m5 5H3m9-9h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" />
+            </svg>
+          </Button>
         </div>
       </div>
     </header>
   )
 }
 
-function NavLink({ to, children }) {
+function NavItem({ to, children }) {
   return (
-    <Link className="rounded-lg px-3 py-2 text-sm font-semibold text-muted hover:bg-slate-50 hover:text-ink" to={to}>
+    <NavLink
+      className={({ isActive }) => `rounded-lg px-3 py-2 text-sm font-semibold transition ${
+        isActive ? 'bg-brand/10 text-brand' : 'text-muted hover:bg-hover hover:text-ink'
+      }`}
+      to={to}
+    >
       {children}
-    </Link>
+    </NavLink>
   )
 }
