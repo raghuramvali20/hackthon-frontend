@@ -19,3 +19,11 @@ export function getReportLabel(report) {
     ? readableText.slice(0, 64)
     : `Accessibility scan · ${getReportId(report).slice(-8)}`
 }
+
+export function getVerificationStatus(report) {
+  return report?.verification?.verificationStatus || 'LEGACY_UNVERIFIED'
+}
+
+export function getIssueCounts(report) {
+  return report?.verification?.issueCounts || null
+}

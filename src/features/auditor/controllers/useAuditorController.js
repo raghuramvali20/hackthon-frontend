@@ -5,11 +5,13 @@ export function useAuditorController() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
 
-  const submitRepair = useCallback(async (rawCode) => {
+  const submitRepair = useCallback(async (source) => {
     setIsSubmitting(true)
     setError('')
     try {
-      return await auditorService.repairCode(rawCode)
+      return source.type === 'url'
+        ? await auditorService.repairSite(source.value)
+        : await auditorService.repairCode(source.value)
     } catch (requestError) {
       setError(requestError.message || 'Unable to repair this code.')
       return null

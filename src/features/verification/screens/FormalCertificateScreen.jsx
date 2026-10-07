@@ -1,18 +1,22 @@
 import { Link, useParams } from 'react-router-dom'
-import { Button } from '../../../shared/components/Button.jsx'
+import { Badge } from '../../../shared/components/Badge.jsx'
 import { Card } from '../../../shared/components/Card.jsx'
 import { formatTimestamp } from '../../../shared/utils/formatters.js'
-import { CertificateBadge } from '../components/CertificateBadge.jsx'
 import { ProofHashCopy } from '../components/ProofHashCopy.jsx'
-import { ProofTheoremCard } from '../components/ProofTheoremCard.jsx'
 import { useVerificationController } from '../controllers/useVerificationController.js'
 
 export function FormalCertificateScreen() {
   const { reportId } = useParams()
-  const { report, certificate, error, isLoading } = useVerificationController(reportId)
+  const { report, verification, error, isLoading } =
+    useVerificationController(reportId)
 
-  if (isLoading) return <p className="text-sm text-muted">Loading certificate…</p>
-  if (error || !certificate) return <p className="text-sm text-danger" role="alert">{error || 'Certificate unavailable.'}</p>
+  if (isLoading) return <p className="text-sm text-muted">Loading verification details…</p>
+  if (error || !verification) {
+    return <p className="text-sm text-danger" role="alert">{error || 'Verification details unavailable.'}</p>
+  }
+
+  const checks = verification.checksPerformed
+  const findings = verification.findingsAfter
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
@@ -20,42 +24,76 @@ export function FormalCertificateScreen() {
         <Link className="text-sm font-semibold text-brand hover:underline" to={`/reports/${reportId}`}>← Back to report</Link>
         <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-brand">Verification record</p>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight">Certificate</h1>
+            <p className="text-sm font-bold uppercase tracking-[0.16em] text-brand">Repair report details</p>
+            <h1 className="mt-2 text-3xl font-bold tracking-tight">WCAG criteria checked</h1>
           </div>
-          <CertificateBadge status={certificate.verificationStatus} />
+          <Badge status={verification.verificationStatus} />
         </div>
       </div>
-      <div className="rounded-xl border border-warn/30 bg-warn/10 p-4 text-sm leading-6 text-warn">
-        This certificate reflects the backend’s automated checks. The current backend does not provide a mathematically verified proof or a public hash verification endpoint.
-      </div>
+
+      <p className="rounded-xl border border-warn/30 bg-warn/10 p-4 text-sm leading-6 text-warn">
+        This scan checks only the named WCAG 2.2 A/AA criteria shown below. It is not a complete WCAG conformance assessment or a formal proof.
+      </p>
+
       <Card className="space-y-5 p-5 sm:p-6">
         <div className="grid gap-4 sm:grid-cols-2">
           <Fact label="Report" value={report.id} />
-          <Fact label="Issued" value={formatTimestamp(certificate.issuedAt)} />
-          <Fact label="Fixes recorded" value={certificate.totalFixes ?? report.appliedFixes.length} />
-          <Fact label="Checks listed" value={certificate.checksPerformed.length} />
+          <Fact label="Checked" value={formatTimestamp(verification.issuedAt)} />
+          <Fact label="Checks run" value={checks.length} />
+          <Fact label="Findings after repair" value={findings.length} />
         </div>
-        <div className="border-t border-line pt-5">
-          <h2 className="mb-3 font-bold">Proof hash</h2>
-          <ProofHashCopy hash={certificate.proofHash} />
-        </div>
-      </Card>
-      <Card className="space-y-4 p-5 sm:p-6">
-        <h2 className="text-lg font-bold">Theorem checks</h2>
-        {certificate.theoremProofs.length ? (
-          certificate.theoremProofs.map((theorem, index) => <ProofTheoremCard key={`${theorem.theorem}-${index}`} theorem={theorem} />)
-        ) : (
-          <p className="text-sm text-muted">The backend returned no theorem checks.</p>
+        {verification.reportHash && (
+          <div className="border-t border-line pt-5">
+            <h2 className="mb-2 font-bold">Report data fingerprint</h2>
+            <p className="mb-3 text-sm leading-6 text-muted">
+              SHA-256 identifier for the original/repaired HTML and supported-check results. It does not prove correctness or conformance.
+            </p>
+            <ProofHashCopy hash={verification.reportHash} />
+          </div>
         )}
       </Card>
-      <Card className="p-5 sm:p-6">
-        <h2 className="font-bold">Checks performed</h2>
-        <ul className="mt-3 list-inside list-disc space-y-2 text-sm text-muted">
-          {certificate.checksPerformed.map((check, index) => <li key={`${check}-${index}`}>{check}</li>)}
-        </ul>
-      </Card>
-      <Link to={`/reports/${reportId}`}><Button variant="secondary">Return to report</Button></Link>
+
+      {checks.length > 0 ? (
+        <Card className="p-5 sm:p-6">
+          <h2 className="font-bold">Checks performed</h2>
+          <ul className="mt-3 divide-y divide-line">
+            {checks.map((check) => (
+              <li className="flex flex-wrap items-center justify-between gap-3 py-3 first:pt-0 last:pb-0" key={check.id}>
+                <span>
+                  <span className="block text-sm font-semibold text-ink">{check.title}</span>
+                  <span className="mt-1 block text-xs text-muted">{check.criterion}</span>
+                </span>
+                <span className="text-xs font-semibold text-muted">{String(check.status || 'UNKNOWN').replaceAll('_', ' ')}</span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      ) : (
+        <Card className="p-5 sm:p-6">
+          <h2 className="font-bold">Legacy report</h2>
+          <p className="mt-2 text-sm leading-6 text-muted">
+            This report was created before supported-check verification was added. Its earlier verification data is retained for compatibility, but is not presented as proof.
+          </p>
+          {verification.legacyStatus && (
+            <p className="mt-3 text-xs text-muted">Previous status: {verification.legacyStatus}</p>
+          )}
+        </Card>
+      )}
+
+      {findings.length > 0 && (
+        <Card className="space-y-4 p-5 sm:p-6">
+          <h2 className="font-bold">Findings after repair</h2>
+          <ul className="space-y-4">
+            {findings.map((finding, index) => (
+              <li className="border-l-2 border-warn/50 pl-4" key={`${finding.ruleId}-${finding.element}-${index}`}>
+                <p className="text-sm font-semibold text-ink">{finding.message}</p>
+                <p className="mt-1 text-xs text-muted">{finding.criterion} · {finding.element}</p>
+                <p className="mt-1 text-xs font-semibold text-warn">{String(finding.status || 'UNKNOWN').replaceAll('_', ' ')}</p>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
     </div>
   )
 }

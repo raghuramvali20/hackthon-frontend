@@ -1,12 +1,12 @@
 import { reportService } from '../../report/services/reportService.js'
-import { normalizeCertificate } from '../models/verification.js'
+import { normalizeVerification } from '../models/verification.js'
 
 export const verificationService = {
-  async getCertificate(reportId) {
+  async getVerification(reportId) {
     const report = await reportService.getReportById(reportId)
-    const certificate = normalizeCertificate(report.formalCertificate)
-    if (!certificate) throw new Error('This report does not contain a verification certificate.')
-    return { report, certificate }
+    const verification = normalizeVerification(report.verification)
+    if (!verification) throw new Error('This report has no supported-check verification data.')
+    return { report, verification }
   },
 
   async verifyPublicHash() {

@@ -2,15 +2,27 @@ import { Link } from 'react-router-dom'
 import { Badge } from '../../../shared/components/Badge.jsx'
 import { Button } from '../../../shared/components/Button.jsx'
 import { Card } from '../../../shared/components/Card.jsx'
-import { formatScore, formatTimestamp } from '../../../shared/utils/formatters.js'
+import { formatTimestamp } from '../../../shared/utils/formatters.js'
 import { useReportController } from '../controllers/useReportController.js'
-import { getImprovement, getReportLabel } from '../models/report.js'
+import {
+  getIssueCounts,
+  getReportLabel,
+  getVerificationStatus,
+} from '../models/report.js'
 
 export function DashboardOverviewScreen() {
   const { reports, isLoading, error, refresh } = useReportController()
-  const averageScore = reports.length
-    ? Math.round(reports.reduce((sum, report) => sum + Number(report.scoreAfter || 0), 0) / reports.length)
-    : null
+  const reportsWithSupportedChecks = reports.filter(
+    (report) => report.verification?.schemaVersion === 1,
+  )
+  const totalRemaining = reportsWithSupportedChecks.reduce(
+    (sum, report) => sum + (getIssueCounts(report)?.remaining || 0),
+    0,
+  )
+  const totalAutomaticFixes = reportsWithSupportedChecks.reduce(
+    (sum, report) => sum + (getIssueCounts(report)?.fixed || 0),
+    0,
+  )
 
   return (
     <div className="space-y-8">
@@ -30,8 +42,8 @@ export function DashboardOverviewScreen() {
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <Metric icon="scans" title="Total scans" value={isLoading ? '…' : reports.length} caption="Saved in your workspace" />
-        <Metric icon="score" title="Average final score" value={isLoading ? '…' : averageScore === null ? '—' : formatScore(averageScore)} caption="Across all completed scans" />
-        <Metric icon="verified" title="Verified reports" value={isLoading ? '…' : reports.filter((item) => item.formalCertificate?.verificationStatus === 'FORMALLY_VERIFIED').length} caption="Marked verified by automated checks" />
+        <Metric icon="score" title="Findings remaining" value={isLoading ? '…' : reportsWithSupportedChecks.length ? totalRemaining : '—'} caption="Across supported checks in available reports" />
+        <Metric icon="verified" title="Automatic fixes" value={isLoading ? '…' : reportsWithSupportedChecks.length ? totalAutomaticFixes : '—'} caption="Only changes confirmed by a follow-up check" />
       </div>
 
       <Card className="overflow-hidden">
@@ -63,7 +75,7 @@ export function DashboardOverviewScreen() {
               </svg>
             </span>
             <p className="mt-4 font-semibold">Your workspace is ready</p>
-            <p className="mx-auto mt-1 max-w-sm text-sm text-muted">Run your first repair to get an accessibility score, review proposed fixes, and create a report.</p>
+            <p className="mx-auto mt-1 max-w-sm text-sm text-muted">Run your first repair to compare supported check results, review proposed fixes, and create a report.</p>
             <Button as={Link} className="mt-5" to="/audit" variant="secondary">Start your first scan</Button>
           </div>
         ) : (
@@ -87,8 +99,8 @@ export function DashboardOverviewScreen() {
                     </span>
                   </span>
                   <span className="ml-auto flex flex-wrap items-center justify-end gap-3 sm:ml-4">
-                    <ScoreChange report={report} />
-                    <Badge status={report.formalCertificate?.verificationStatus} />
+                    <FindingSummary report={report} />
+                    <Badge status={getVerificationStatus(report)} />
                     <svg aria-hidden="true" className="hidden text-muted transition-transform group-hover:translate-x-0.5 sm:block" fill="none" height="17" viewBox="0 0 24 24" width="17">
                       <path d="m9 18 6-6-6-6" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
                     </svg>
@@ -127,15 +139,15 @@ function MetricIcon({ type }) {
   return <svg aria-hidden="true" fill="none" height="19" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" viewBox="0 0 24 24" width="19">{shapes[type]}</svg>
 }
 
-function ScoreChange({ report }) {
-  const improvement = getImprovement(report)
+function FindingSummary({ report }) {
+  const counts = getIssueCounts(report)
   return (
     <span className="text-right">
       <span className="block text-sm font-bold text-ink">
-        {formatScore(report.scoreBefore)} <span className="px-0.5 text-muted">→</span> {formatScore(report.scoreAfter)}
+        {counts ? `${counts.remaining} remaining` : 'Legacy report'}
       </span>
-      <span className={`mt-0.5 block text-[11px] font-semibold ${improvement > 0 ? 'text-good' : 'text-muted'}`}>
-        {improvement > 0 ? `+${improvement} pts` : improvement === 0 ? 'No score change' : 'Score comparison'}
+      <span className="mt-0.5 block text-[11px] font-medium text-muted">
+        {counts ? `${counts.fixed} auto-fixed · ${counts.needsReview} need review` : 'No supported-check data'}
       </span>
     </span>
   )

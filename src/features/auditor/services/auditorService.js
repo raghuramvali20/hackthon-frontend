@@ -9,4 +9,11 @@ export const auditorService = {
     })
     return normalizeReport(unwrapData(response, 'report'))
   },
+  async repairSite(siteUrl) {
+    const response = await apiRequest('/repair', {
+      method: 'POST',
+      body: { siteUrl },
+    })
+    return normalizeReport(unwrapData(response, 'report'))
+  },
 }

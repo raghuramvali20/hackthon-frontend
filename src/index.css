@@ -126,6 +126,87 @@ textarea {
   overflow-wrap: normal;
 }
 
+.code-diff-scroll {
+  background: var(--color-code-bg);
+  color: var(--color-code-text);
+  scrollbar-color: var(--color-muted) var(--color-code-bg);
+}
+
+.code-diff-line {
+  display: grid;
+  grid-template-columns: 1.5rem 3rem max-content;
+  min-height: 1.625rem;
+  align-items: stretch;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.625rem;
+}
+
+.code-diff-line.wrap {
+  grid-template-columns: 1.5rem 3rem minmax(0, 1fr);
+}
+
+.code-diff-line code {
+  padding-right: 1rem;
+  color: inherit;
+  font: inherit;
+}
+
+.code-diff-line.added {
+  background: rgb(22 132 91 / 12%);
+}
+
+.code-diff-line.removed {
+  background: rgb(189 51 70 / 10%);
+}
+
+.code-diff-line.empty {
+  background: rgb(104 117 141 / 8%);
+}
+
+.code-diff-marker,
+.code-diff-number {
+  user-select: none;
+  color: var(--color-muted);
+  text-align: right;
+}
+
+.code-diff-marker {
+  padding-right: 0.35rem;
+}
+
+.code-diff-number {
+  position: sticky;
+  left: 0;
+  padding-right: 0.75rem;
+  border-right: 1px solid var(--color-code-line);
+  background: var(--color-code-bg);
+}
+
+.code-diff-line.added .code-diff-marker,
+.code-diff-line.added .code-diff-number {
+  color: var(--color-good);
+}
+
+.code-diff-line.removed .code-diff-marker,
+.code-diff-line.removed .code-diff-number {
+  color: var(--color-danger);
+}
+
+.code-diff-line code.whitespace-pre-wrap {
+  min-width: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+:root[data-theme='dark'] .code-diff-line.added {
+  background: rgb(89 210 161 / 12%);
+}
+
+:root[data-theme='dark'] .code-diff-line.removed {
+  background: rgb(255 135 147 / 10%);
+}
+
 .code-editor {
   border-color: var(--color-code-line);
   background: var(--color-code-bg);

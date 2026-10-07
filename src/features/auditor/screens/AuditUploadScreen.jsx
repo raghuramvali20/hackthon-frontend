@@ -9,12 +9,17 @@ import { STARTER_HTML } from '../models/auditor.js'
 
 export function AuditUploadScreen() {
   const [rawCode, setRawCode] = useState(STARTER_HTML)
+  const [siteUrl, setSiteUrl] = useState('')
+  const [sourceType, setSourceType] = useState('html')
   const navigate = useNavigate()
   const { isSubmitting, error, submitRepair } = useAuditorController()
 
   async function handleSubmit(event) {
     event.preventDefault()
-    const report = await submitRepair(rawCode)
+    const report = await submitRepair({
+      type: sourceType,
+      value: sourceType === 'url' ? siteUrl : rawCode,
+    })
     if (report) navigate(`/reports/${report.id}`, { state: { report } })
   }
 
@@ -30,7 +35,7 @@ export function AuditUploadScreen() {
           </span>
           <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Make your markup work for everyone.</h1>
           <p className="mt-3 max-w-xl text-sm leading-6 text-indigo-100 sm:text-base">
-            Run an accessibility repair pass, review every change, and keep a verifiable record of your results.
+            Run supported accessibility checks, review suggested changes, and keep a record of the results.
           </p>
           <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs font-medium text-indigo-100">
             <span>01&nbsp; Deterministic checks</span>
@@ -44,22 +49,50 @@ export function AuditUploadScreen() {
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-subtle px-5 py-4 sm:px-6">
           <div>
             <h2 className="font-bold">Source markup</h2>
-            <p className="mt-1 text-xs text-muted">Paste an HTML snippet to inspect and repair.</p>
+            <p className="mt-1 text-xs text-muted">Paste markup or fetch a public website’s HTML to inspect and repair.</p>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="rounded-lg border border-line bg-surface px-2.5 py-1 text-[11px] font-bold tracking-wide text-muted">HTML</span>
-            <Button onClick={() => setRawCode(STARTER_HTML)} size="sm" variant="secondary">Load sample</Button>
-            <Button onClick={() => setRawCode('')} size="sm" variant="ghost">Clear</Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <div aria-label="Input source" className="inline-flex rounded-lg border border-line bg-surface p-0.5" role="group">
+              <SourceButton active={sourceType === 'html'} onClick={() => setSourceType('html')}>Paste HTML</SourceButton>
+              <SourceButton active={sourceType === 'url'} onClick={() => setSourceType('url')}>Website URL</SourceButton>
+            </div>
+            {sourceType === 'html' && (
+              <>
+                <Button onClick={() => setRawCode(STARTER_HTML)} size="sm" variant="secondary">Load sample</Button>
+                <Button onClick={() => setRawCode('')} size="sm" variant="ghost">Clear</Button>
+              </>
+            )}
           </div>
         </div>
         <div className="p-4 sm:p-6">
         <form className="space-y-5" onSubmit={handleSubmit}>
-          <CodeEditor onChange={setRawCode} value={rawCode} />
+          {sourceType === 'html' ? (
+            <CodeEditor onChange={setRawCode} value={rawCode} />
+          ) : (
+            <label className="block">
+              <span className="mb-2 block text-sm font-semibold text-ink">Public website URL</span>
+              <input
+                autoComplete="url"
+                className="min-h-12 w-full rounded-xl border border-line bg-surface px-4 text-ink shadow-inner focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30"
+                onChange={(event) => setSiteUrl(event.target.value)}
+                placeholder="https://example.com"
+                required
+                type="url"
+                value={siteUrl}
+              />
+              <span className="mt-2 block text-xs leading-5 text-muted">
+                The server fetches the page’s delivered HTML. Pages that require JavaScript to render may not be fully scanned.
+                Private/local addresses, non-HTML pages, and downloads over 512 KB are blocked. AI repair is limited to pages no larger than 100 KB.
+              </span>
+            </label>
+          )}
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="max-w-xl text-xs leading-5 text-muted">
-              HTML only · up to 100,000 characters · API request limit is 1 MB.
+              {sourceType === 'html'
+                ? 'HTML only · up to 100,000 characters · API request limit is 1 MB.'
+                : 'Public HTTP/HTTPS page · HTML response up to 512 KB.'}
             </p>
-            <Button disabled={!rawCode.trim() || isSubmitting} type="submit">
+            <Button disabled={(sourceType === 'html' ? !rawCode.trim() : !siteUrl.trim()) || isSubmitting} type="submit">
               {isSubmitting ? 'Repairing…' : 'Run accessibility repair'} <span aria-hidden="true">→</span>
             </Button>
           </div>
@@ -74,5 +107,18 @@ export function AuditUploadScreen() {
         Do not submit secrets or personal data. Your submitted code is stored with your account so you can review scan history.
       </p>
     </div>
+  )
+}
+
+function SourceButton({ active, onClick, children }) {
+  return (
+    <button
+      aria-pressed={active}
+      className={`min-h-8 rounded-md px-3 text-xs font-semibold ${active ? 'bg-brand text-white' : 'text-muted hover:text-ink'}`}
+      onClick={onClick}
+      type="button"
+    >
+      {children}
+    </button>
   )
 }

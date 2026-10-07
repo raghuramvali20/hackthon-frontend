@@ -8,7 +8,7 @@ export function ScanningScreen({ active, error }) {
       {error ? (
         <p className="text-sm text-danger" role="alert">{error}</p>
       ) : (
-        <ScanProgress active label="Applying fixes and preparing verification report…" />
+        <ScanProgress active label="Running supported checks and preparing the report…" />
       )}
     </Card>
   )

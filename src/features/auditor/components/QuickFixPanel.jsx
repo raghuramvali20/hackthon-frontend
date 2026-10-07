@@ -1,6 +1,6 @@
 export function QuickFixPanel({ fixes = [] }) {
   if (!fixes.length) {
-    return <p className="text-sm text-muted">No fix details were returned for this scan.</p>
+    return <p className="text-sm text-muted">No automatic fixes were needed or safe to apply.</p>
   }
 
   return (

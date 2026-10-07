@@ -10,16 +10,16 @@ export function useVerificationController(reportId) {
 
   useEffect(() => {
     let active = true
-    verificationService.getCertificate(reportId)
-      .then((certificateResult) => {
-        if (active) setState({ reportId, result: certificateResult, error: '' })
+    verificationService.getVerification(reportId)
+      .then((verificationResult) => {
+        if (active) setState({ reportId, result: verificationResult, error: '' })
       })
       .catch((requestError) => {
         if (active) {
           setState({
             reportId,
             result: null,
-            error: requestError.message || 'Unable to load certificate.',
+            error: requestError.message || 'Unable to load report details.',
           })
         }
       })
@@ -27,7 +27,7 @@ export function useVerificationController(reportId) {
   }, [reportId])
 
   if (state.reportId !== reportId) {
-    return { report: null, certificate: null, error: '', isLoading: true }
+    return { report: null, verification: null, error: '', isLoading: true }
   }
   return { ...state.result, error: state.error, isLoading: false }
 }

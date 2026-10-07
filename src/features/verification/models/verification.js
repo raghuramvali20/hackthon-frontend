@@ -1,8 +1,15 @@
-export function normalizeCertificate(certificate) {
-  if (!certificate || typeof certificate !== 'object') return null
+export function normalizeVerification(verification) {
+  if (!verification || typeof verification !== 'object') return null
   return {
-    ...certificate,
-    checksPerformed: Array.isArray(certificate.checksPerformed) ? certificate.checksPerformed : [],
-    theoremProofs: Array.isArray(certificate.theoremProofs) ? certificate.theoremProofs : [],
+    ...verification,
+    checksPerformed: Array.isArray(verification.checksPerformed) ? verification.checksPerformed : [],
+    findings: Array.isArray(verification.findings) ? verification.findings : [],
+    findingsAfter: Array.isArray(verification.findingsAfter) ? verification.findingsAfter : [],
+    issueCounts: verification.issueCounts || null,
+    reportHash:
+      verification.schemaVersion === 1 &&
+      /^[a-f0-9]{64}$/i.test(verification.reportHash || '')
+        ? verification.reportHash
+        : null,
   }
 }

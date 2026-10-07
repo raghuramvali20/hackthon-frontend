@@ -18,7 +18,7 @@ export function ProofHashCopy({ hash }) {
   return (
     <div className="flex flex-wrap items-center gap-3">
       <code className="rounded-lg bg-slate-100 px-3 py-2 font-mono text-xs text-ink">{truncateHash(hash, 12)}</code>
-      <Button onClick={handleCopy} variant="secondary">Copy hash</Button>
+      <Button onClick={handleCopy} variant="secondary">Copy identifier</Button>
       {feedback && <span aria-live="polite" className="text-xs text-muted" role="status">{feedback}</span>}
     </div>
   )
