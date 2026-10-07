@@ -30,6 +30,9 @@
   -moz-osx-font-smoothing: grayscale;
   font-optical-sizing: auto;
   --shadow-card: 0 2px 8px rgb(20 32 60 / 4%), 0 14px 36px rgb(20 32 60 / 4%);
+  --color-code-bg: #f7f8fb;
+  --color-code-text: #182238;
+  --color-code-line: #dce2ed;
 }
 
 :root[data-theme='dark'] {
@@ -48,6 +51,9 @@
   --color-warn: #f3bd69;
   --color-danger: #ff8793;
   --shadow-card: 0 2px 8px rgb(0 0 0 / 16%), 0 18px 44px rgb(0 0 0 / 14%);
+  --color-code-bg: #0e1420;
+  --color-code-text: #e3eaf5;
+  --color-code-line: #303c50;
 }
 
 * {
@@ -75,6 +81,12 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
+button:not(:disabled),
+a[href],
+summary {
+  cursor: pointer;
+}
+
 ::selection {
   color: #fff;
   background: #5146e5;
@@ -99,6 +111,29 @@ aside {
 input,
 textarea {
   color: var(--color-ink);
+}
+
+.code-view {
+  background: var(--color-code-bg);
+  color: var(--color-code-text);
+  border-color: var(--color-code-line);
+  tab-size: 2;
+}
+
+.code-view code {
+  font-family: var(--font-mono);
+  white-space: pre;
+  overflow-wrap: normal;
+}
+
+.code-editor {
+  border-color: var(--color-code-line);
+  background: var(--color-code-bg);
+  color: var(--color-code-text);
+}
+
+.code-editor::placeholder {
+  color: var(--color-muted);
 }
 
 input::placeholder,

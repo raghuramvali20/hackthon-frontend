@@ -4,7 +4,7 @@ export function CodeEditor({ value, onChange, disabled = false }) {
       <span className="mb-2 block text-sm font-semibold text-ink">HTML to repair</span>
       <textarea
         aria-label="HTML to repair"
-        className="min-h-80 w-full resize-y rounded-xl border border-[#252c3b] bg-[#101522] p-4 font-mono text-sm leading-6 text-[#e4e9f2] shadow-inner placeholder:text-slate-500 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30"
+        className="code-editor min-h-80 w-full resize-y rounded-xl border p-4 font-mono text-sm leading-6 shadow-inner focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30"
         disabled={disabled}
         maxLength={100000}
         onChange={(event) => onChange(event.target.value)}
