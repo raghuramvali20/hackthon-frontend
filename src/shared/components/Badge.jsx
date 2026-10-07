@@ -2,6 +2,7 @@ export function Badge({ children, status, className = '' }) {
   const label = children || status || 'UNVERIFIED'
   const styles = {
     PASSED_SUPPORTED_CHECKS: 'bg-good/10 text-good ring-good/20',
+    NO_PATTERN_DETECTED_IN_SUPPORTED_CHECKS: 'bg-subtle text-ink ring-line',
     ISSUES_REMAIN: 'bg-danger/10 text-danger ring-danger/20',
     NEEDS_REVIEW: 'bg-warn/10 text-warn ring-warn/20',
     REMAINS: 'bg-danger/10 text-danger ring-danger/20',
@@ -17,6 +18,7 @@ export function Badge({ children, status, className = '' }) {
   const style = styles[status || label] || styles.UNVERIFIED
   const labels = {
     PASSED_SUPPORTED_CHECKS: 'Supported checks passed',
+    NO_PATTERN_DETECTED_IN_SUPPORTED_CHECKS: 'No pattern detected · limited checks',
     ISSUES_REMAIN: 'Issues remain',
     NEEDS_REVIEW: 'Needs review',
     APPROVED: 'Approved',

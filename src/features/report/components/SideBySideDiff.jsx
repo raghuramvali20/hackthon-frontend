@@ -5,6 +5,8 @@ export function SideBySideDiff({ report }) {
     <CodeDiff
       originalCode={report?.originalCode || ''}
       repairedCode={report?.repairedCode || ''}
+      sourceFileName={report?.sourceFileName || ''}
+      sourceType={report?.sourceType || 'html'}
     />
   )
 }

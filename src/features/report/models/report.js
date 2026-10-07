@@ -3,6 +3,7 @@ export function getReportId(report) {
 }
 
 export function getImprovement(report) {
+  if (report?.scoreBefore == null || report?.scoreAfter == null) return null
   const before = Number(report?.scoreBefore)
   const after = Number(report?.scoreAfter)
   if (!Number.isFinite(before) || !Number.isFinite(after)) return null
@@ -10,6 +11,9 @@ export function getImprovement(report) {
 }
 
 export function getReportLabel(report) {
+  if (report?.sourceType === 'react-jsx') {
+    return report.sourceFileName || 'React source scan'
+  }
   const readableText = String(report?.originalCode || '')
     .replace(/<!--[\s\S]*?-->/g, ' ')
     .replace(/<[^>]*>/g, ' ')

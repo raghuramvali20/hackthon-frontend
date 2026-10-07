@@ -1,21 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  --color-canvas: #f4f6fb;
-  --color-surface: #ffffff;
-  --color-raised: #ffffff;
-  --color-subtle: #f8f9fc;
-  --color-hover: #f0f2f8;
-  --color-ink: #182238;
-  --color-muted: #68758d;
-  --color-line: #e3e8f1;
-  --color-brand: #5146e5;
-  --color-brand-dark: #3930b5;
-  --color-good: #16845b;
-  --color-warn: #a45b0a;
-  --color-danger: #bd3346;
-  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  --color-canvas: #f5efe5;
+  --color-surface: #fffaf2;
+  --color-raised: #fffdf9;
+  --color-subtle: #eee5d9;
+  --color-hover: #e9ddcf;
+  --color-ink: #2c222b;
+  --color-muted: #665963;
+  --color-line: #d9ccbf;
+  --color-brand: #b83f2b;
+  --color-brand-dark: #96321f;
+  --color-accent: #c2cf43;
+  --color-good: #246449;
+  --color-warn: #80520d;
+  --color-danger: #9b3028;
+  --font-sans: "Avenir Next", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-display: Georgia, "Times New Roman", serif;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
@@ -28,32 +29,32 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-optical-sizing: auto;
-  --shadow-card: 0 2px 8px rgb(20 32 60 / 4%), 0 14px 36px rgb(20 32 60 / 4%);
-  --color-code-bg: #f7f8fb;
-  --color-code-text: #182238;
-  --color-code-line: #dce2ed;
+  --shadow-card: 0 1px 2px rgb(44 34 43 / 5%), 0 14px 36px rgb(44 34 43 / 5%);
+  --color-code-bg: #f8f3eb;
+  --color-code-text: #2c222b;
+  --color-code-line: #dfd4c8;
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --color-canvas: #0c101a;
-  --color-surface: #121927;
-  --color-raised: #182131;
-  --color-subtle: #151e2c;
-  --color-hover: hsl(216, 30%, 18%);
-  --color-ink: #edf2fb;
-  --color-muted: #9aa8bd;
-  --color-line: #283549;
-  --color-brand: #a39aff;
-  --color-brand-dark: #887cf3;
-  --color-good: #59d2a1;
-  --color-warn: #f3bd69;
-  --color-danger: #ff8793;
-  --shadow-card: 0 2px 8px rgb(0 0 0 / 16%), 0 18px 44px rgb(0 0 0 / 14%);
-  --color-code-bg: #0e1420;
-  --color-code-text: #e3eaf5;
-  --color-code-line: #303c50;
+  --color-canvas: #191619;
+  --color-surface: #211d21;
+  --color-raised: #292329;
+  --color-subtle: #2d262d;
+  --color-hover: #383039;
+  --color-ink: #f7efe5;
+  --color-muted: #c6b8bd;
+  --color-line: #4b3f47;
+  --color-brand: #e6755c;
+  --color-brand-dark: #d06a54;
+  --color-accent: #dce878;
+  --color-good: #83d3a4;
+  --color-warn: #eac878;
+  --color-danger: #f09083;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 20%), 0 18px 44px rgb(0 0 0 / 18%);
+  --color-code-bg: #1c191d;
+  --color-code-text: #f0e8df;
+  --color-code-line: #40363e;
 }
 
 * {
@@ -64,9 +65,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  background:
-    radial-gradient(ellipse at 88% 0%, rgb(99 102 241 / 6%), transparent 36rem),
-    var(--color-canvas);
+  background: var(--color-canvas);
   transition: background-color 180ms ease, color 180ms ease;
 }
 
@@ -89,7 +88,7 @@ summary {
 
 ::selection {
   color: #fff;
-  background: #5146e5;
+  background: #96321f;
 }
 
 :focus-visible {
@@ -226,13 +225,36 @@ textarea::placeholder {
   box-shadow: var(--shadow-card);
 }
 
-:root[data-theme='dark'] .button-primary {
-  background-color: #574ce2;
-  color: #ffffff;
+.display-heading {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.035em;
 }
 
-:root[data-theme='dark'] .button-primary:hover:not(:disabled) {
-  background-color: #6a60ee;
+.paper-grid {
+  background-image: linear-gradient(to right, var(--color-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(to bottom left, #000, transparent 72%);
+  opacity: 0.38;
+}
+
+.drop-target {
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.drop-target.is-dragging {
+  border-color: var(--color-brand);
+  background: color-mix(in srgb, var(--color-brand) 9%, var(--color-surface));
+  transform: translateY(-2px);
+}
+
+:root[data-theme='dark'] .button-primary {
+  color: var(--color-canvas);
+}
+
+:root[data-theme='dark'] .summary-vermilion {
+  color: var(--color-canvas);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -3,7 +3,12 @@ import { copyToClipboard } from '../utils/formatters.js'
 
 const MAX_DIFF_CELLS = 1_000_000
 
-export function CodeDiff({ originalCode = '', repairedCode = '' }) {
+export function CodeDiff({
+  originalCode = '',
+  repairedCode = '',
+  sourceType = 'html',
+  sourceFileName = '',
+}) {
   const [view, setView] = useState('split')
   const [wrapLines, setWrapLines] = useState(false)
   const [copyStatus, setCopyStatus] = useState('')
@@ -16,27 +21,30 @@ export function CodeDiff({ originalCode = '', repairedCode = '' }) {
   async function handleCopy() {
     try {
       await copyToClipboard(repairedCode)
-      setCopyStatus('Updated HTML copied without line numbers.')
+      setCopyStatus(`Updated source copied without line numbers.`)
     } catch (error) {
       setCopyStatus(error.message || 'Could not copy code')
     }
   }
 
   function handleDownload() {
-    const file = new Blob([repairedCode], { type: 'text/html;charset=utf-8' })
+    const extension = sourceType === 'react-jsx'
+      ? sourceFileName.toLowerCase().endsWith('.tsx') ? 'tsx' : 'jsx'
+      : 'html'
+    const file = new Blob([repairedCode], { type: extension === 'html' ? 'text/html;charset=utf-8' : 'text/plain;charset=utf-8' })
     const url = URL.createObjectURL(file)
     const link = document.createElement('a')
     link.href = url
-    link.download = 'accesspilot-repaired.html'
+    link.download = `accesspilot-repaired.${extension}`
     link.click()
     URL.revokeObjectURL(url)
   }
 
   return (
-    <section aria-label="HTML code comparison" className="overflow-hidden rounded-xl border border-line bg-surface">
+    <section aria-label={`${sourceType === 'react-jsx' ? 'React source' : 'HTML'} code comparison`} className="overflow-hidden rounded-xl border border-line bg-surface">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-subtle px-4 py-3">
         <div>
-          <h3 className="text-sm font-semibold text-ink">Code comparison</h3>
+          <h3 className="text-sm font-semibold text-ink">{sourceType === 'react-jsx' ? 'Source comparison' : 'Code comparison'}</h3>
           <p className="mt-1 text-xs text-muted">
             {changedLines === 0 ? 'No textual changes' : `${changedLines} changed ${changedLines === 1 ? 'line' : 'lines'}`}
             {' · '}line numbers are not included when copying

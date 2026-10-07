@@ -7,7 +7,13 @@ export const auditorService = {
       method: 'POST',
       body: source.type === 'url'
         ? { siteUrl: source.value }
-        : { rawCode: source.value },
+        : source.type === 'react-jsx'
+          ? {
+              sourceType: 'react-jsx',
+              sourceCode: source.value,
+              sourceFileName: source.fileName,
+            }
+          : { rawCode: source.value },
     })
     return unwrapData(response, 'preview')
   },

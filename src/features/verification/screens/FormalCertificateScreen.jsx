@@ -17,6 +17,7 @@ export function FormalCertificateScreen() {
 
   const checks = verification.checksPerformed
   const findings = verification.findingsAfter
+  const isReactSource = verification.sourceType === 'react-jsx'
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
@@ -25,28 +26,32 @@ export function FormalCertificateScreen() {
         <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-sm font-bold uppercase tracking-[0.16em] text-brand">Repair report details</p>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight">WCAG criteria checked</h1>
+            <h1 className="mt-2 text-3xl font-bold tracking-tight">
+              {isReactSource ? 'Static source check catalog' : 'WCAG criteria checked'}
+            </h1>
           </div>
           <Badge status={verification.verificationStatus} />
         </div>
       </div>
 
       <p className="rounded-xl border border-warn/30 bg-warn/10 p-4 text-sm leading-6 text-warn">
-        This scan checks only the named WCAG 2.2 A/AA criteria shown below. It is not a complete WCAG conformance assessment or a formal proof.
+        {isReactSource
+          ? 'This is a static inspection of one JSX/TSX file. Runtime behavior, project-level components, and untested criteria are not assessed; this is not a complete WCAG result or a formal proof.'
+          : 'This scan checks only the named WCAG 2.2 A/AA criteria shown below. It is not a complete WCAG conformance assessment or a formal proof.'}
       </p>
 
       <Card className="space-y-5 p-5 sm:p-6">
         <div className="grid gap-4 sm:grid-cols-2">
           <Fact label="Report" value={report.id} />
           <Fact label="Checked" value={formatTimestamp(verification.issuedAt)} />
-          <Fact label="Checks run" value={checks.length} />
+          <Fact label={isReactSource ? 'Catalog entries' : 'Checks run'} value={checks.length} />
           <Fact label="Findings after repair" value={findings.length} />
         </div>
         {verification.reportHash && (
           <div className="border-t border-line pt-5">
             <h2 className="mb-2 font-bold">Report data fingerprint</h2>
             <p className="mb-3 text-sm leading-6 text-muted">
-              SHA-256 identifier for the original/repaired HTML and supported-check results. It does not prove correctness or conformance.
+              SHA-256 identifier for the original/repaired source and reported check results. It does not prove correctness or conformance.
             </p>
             <ProofHashCopy hash={verification.reportHash} />
           </div>
@@ -61,9 +66,17 @@ export function FormalCertificateScreen() {
               <li className="flex flex-wrap items-center justify-between gap-3 py-3 first:pt-0 last:pb-0" key={check.id}>
                 <span>
                   <span className="block text-sm font-semibold text-ink">{check.title}</span>
-                  <span className="mt-1 block text-xs text-muted">{check.criterion}</span>
+                  <span className="mt-1 block max-w-2xl text-xs leading-5 text-muted">
+                    {check.criterion || 'No criterion assigned'}
+                    {check.wcagVersion ? ` · WCAG ${check.wcagVersion}` : ''}
+                    {check.detectionMethod ? ` · ${check.detectionMethod}` : ''}
+                    {check.limitations ? ` · ${check.limitations}` : ''}
+                  </span>
                 </span>
-                <span className="text-xs font-semibold text-muted">{String(check.status || 'UNKNOWN').replaceAll('_', ' ')}</span>
+                <span className="shrink-0 text-right">
+                  <span className="block text-xs font-semibold text-muted">{String(check.status || 'UNKNOWN').replaceAll('_', ' ')}</span>
+                  {check.category && <span className="mt-1 block text-[10px] font-medium uppercase tracking-wide text-muted">{check.category.replaceAll('-', ' ')}</span>}
+                </span>
               </li>
             ))}
           </ul>
@@ -87,7 +100,10 @@ export function FormalCertificateScreen() {
             {findings.map((finding, index) => (
               <li className="border-l-2 border-warn/50 pl-4" key={`${finding.ruleId}-${finding.element}-${index}`}>
                 <p className="text-sm font-semibold text-ink">{finding.message}</p>
-                <p className="mt-1 text-xs text-muted">{finding.criterion} · {finding.element}</p>
+                <p className="mt-1 text-xs text-muted">
+                  {finding.criterion || 'Review note'} · {finding.element}
+                  {finding.sourceLocation ? ` · line ${finding.sourceLocation.line}, column ${finding.sourceLocation.column}` : ''}
+                </p>
                 <p className="mt-1 text-xs font-semibold text-warn">{String(finding.status || 'UNKNOWN').replaceAll('_', ' ')}</p>
               </li>
             ))}

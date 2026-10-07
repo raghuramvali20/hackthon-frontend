@@ -8,6 +8,7 @@ export function approveRepair(approved, skipped, repair) {
         findingId: repair.findingId,
         value: repair.value,
         repairType: repair.repairType,
+        imageIntent: repair.imageIntent,
       },
     },
     skipped: nextSkipped,

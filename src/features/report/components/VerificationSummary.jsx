@@ -6,6 +6,7 @@ export function VerificationSummary({ verification, scoreBefore, scoreAfter }) {
   const counts = verification?.issueCounts
   const findingsAfter = verification?.findingsAfter || []
   const checks = verification?.checksPerformed || []
+  const isReactSource = verification?.sourceType === 'react-jsx'
 
   if (!verification) {
     return (
@@ -24,8 +25,12 @@ export function VerificationSummary({ verification, scoreBefore, scoreAfter }) {
       <Card className="p-5 sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="font-bold">WCAG repair results</h2>
-            <p className="mt-1 text-sm text-muted">Results for this scan’s supported WCAG 2.2 A/AA criteria subset—not a complete conformance assessment.</p>
+            <h2 className="font-bold">{isReactSource ? 'React source check results' : 'WCAG repair results'}</h2>
+            <p className="mt-1 text-sm text-muted">
+              {isReactSource
+                ? 'Static inspection of one JSX/TSX file only. This is not a complete WCAG assessment or a rendered-page test.'
+                : 'Results for this scan’s supported WCAG 2.2 A/AA criteria subset—not a complete conformance assessment.'}
+            </p>
           </div>
           <Badge status={verification.verificationStatus} />
         </div>
@@ -83,9 +88,11 @@ export function VerificationSummary({ verification, scoreBefore, scoreAfter }) {
       {checks.length > 0 && (
         <Card className="p-5 sm:p-6">
           <div>
-            <h2 className="font-bold">WCAG 2.2 A/AA criteria checked</h2>
+            <h2 className="font-bold">{isReactSource ? 'Static source check catalog' : 'WCAG 2.2 A/AA criteria checked'}</h2>
             <p className="mt-1 text-sm text-muted">
-              This is a limited subset. A passing result applies only to these static HTML checks.
+              {isReactSource
+                ? 'Statuses describe only patterns inspected in this file. “Not checked” and “needs review” are not passes.'
+                : 'This is a limited subset. A passing result applies only to these static HTML checks.'}
             </p>
           </div>
           <ul className="mt-3 divide-y divide-line">
@@ -93,9 +100,21 @@ export function VerificationSummary({ verification, scoreBefore, scoreAfter }) {
               <li className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm" key={check.id}>
                 <span>
                   <span className="block font-semibold text-ink">{check.title}</span>
-                  <span className="mt-1 block text-xs text-muted">Success criterion {check.criterion}</span>
+                  <span className="mt-1 block max-w-2xl text-xs leading-5 text-muted">
+                    {check.criterion ? `Success criterion ${check.criterion}` : 'No criterion assigned'}
+                    {check.wcagVersion ? ` · WCAG ${check.wcagVersion}` : ''}
+                    {check.detectionMethod ? ` · ${check.detectionMethod}` : ''}
+                    {check.limitations ? ` · ${check.limitations}` : ''}
+                  </span>
                 </span>
-                <span className="text-xs font-semibold text-muted">{String(check.status || 'UNKNOWN').replaceAll('_', ' ')}</span>
+                <span className="shrink-0 text-right">
+                  <span className="block text-xs font-semibold text-muted">{String(check.status || 'UNKNOWN').replaceAll('_', ' ')}</span>
+                  {check.category && (
+                    <span className="mt-1 block text-[10px] font-medium uppercase tracking-wide text-muted">
+                      {check.category.replaceAll('-', ' ')}
+                    </span>
+                  )}
+                </span>
               </li>
             ))}
           </ul>

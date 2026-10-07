@@ -32,10 +32,15 @@ export function ReportDetailScreen() {
         <div>
           <Link className="text-sm font-semibold text-brand hover:underline" to="/reports">← All reports</Link>
           <div className="mt-3 flex flex-wrap items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Repair report</h1>
+            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              {report.sourceType === 'react-jsx' ? 'React source report' : 'Repair report'}
+            </h1>
             <Badge status={getVerificationStatus(report)} />
           </div>
           <p className="mt-2 text-sm text-muted">Created {formatTimestamp(report.createdAt)}</p>
+          {report.sourceType === 'react-jsx' && (
+            <p className="mt-1 text-sm text-muted">Single-file source: {report.sourceFileName || 'React source'}</p>
+          )}
           {report.sourceType === 'url' && report.sourceUrl && (
             <p className="mt-1 text-sm text-muted">
               Scanned website: <a className="font-medium text-brand hover:underline" href={report.sourceUrl} rel="noopener noreferrer" target="_blank">{report.sourceUrl}</a>
@@ -62,7 +67,9 @@ export function ReportDetailScreen() {
       <section aria-labelledby="repaired-output-title" className="space-y-3">
         <div>
           <h2 className="text-lg font-bold" id="repaired-output-title">Original and updated code</h2>
-          <p className="mt-1 text-sm text-muted">Compare the repair, inspect changed lines, and copy or download the updated HTML.</p>
+          <p className="mt-1 text-sm text-muted">
+            Compare the repair, inspect changed lines, and copy or download the updated {report.sourceType === 'react-jsx' ? 'React source' : 'HTML'}.
+          </p>
         </div>
         <SideBySideDiff report={report} />
       </section>

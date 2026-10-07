@@ -2,32 +2,33 @@ import { NavLink } from 'react-router-dom'
 
 export function Sidebar() {
   const linkClass = ({ isActive }) =>
-    `group flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition-colors ${
-      isActive ? 'bg-brand/10 text-brand' : 'text-muted hover:bg-hover hover:text-ink'
+    `group flex items-center gap-3 rounded-xl border-l-2 px-3.5 py-3 text-sm font-semibold transition-colors ${
+      isActive ? 'border-brand bg-subtle text-ink' : 'border-transparent text-muted hover:bg-hover hover:text-ink'
     }`
 
   return (
     <aside aria-label="Workspace navigation" className="hidden w-60 shrink-0 lg:block">
       <nav className="sticky top-28">
-        <p className="mb-3 px-3 text-[11px] font-bold uppercase tracking-[0.16em] text-muted">Workspace</p>
+        <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-muted">Your workspace</p>
         <div className="space-y-1">
           <NavLink className={linkClass} to="/audit">
             <NavIcon type="scan" />
-            New accessibility scan
+            Scan desk
           </NavLink>
           <NavLink className={linkClass} to="/reports">
             <NavIcon type="report" />
             Scan history
           </NavLink>
         </div>
-        <div className="mt-8 rounded-2xl border border-line bg-surface p-4">
-          <div className="flex items-center gap-2 text-xs font-bold text-ink">
-            <span className="size-2 rounded-full bg-good" />
-            Safe, private workspace
-          </div>
-          <p className="mt-2 text-xs leading-5 text-muted">
-            Your scans are saved to your account. Always manually review generated repairs before release.
+        <div className="mt-8 border-t border-line px-3 pt-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">Scope note</p>
+          <p className="mt-2 text-xs leading-5 text-ink">
+            A focused set of static HTML checks. Review every proposed change before release.
           </p>
+          <span className="mt-3 inline-flex items-center gap-2 text-[11px] font-semibold text-muted">
+            <span className="size-2 rounded-full bg-accent ring-1 ring-ink/20" />
+            Prototype · limited check set
+          </span>
         </div>
       </nav>
     </aside>

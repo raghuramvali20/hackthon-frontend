@@ -22,8 +22,9 @@ export function normalizeReport(report) {
   return {
     ...report,
     id: String(report.id || report._id || ''),
-    sourceType: report.sourceType === 'url' ? 'url' : 'html',
+    sourceType: ['url', 'react-jsx'].includes(report.sourceType) ? report.sourceType : 'html',
     sourceUrl: typeof report.sourceUrl === 'string' ? report.sourceUrl : '',
+    sourceFileName: typeof report.sourceFileName === 'string' ? report.sourceFileName : '',
     appliedFixes: Array.isArray(report.appliedFixes) ? report.appliedFixes : [],
     appliedRepairs: Array.isArray(report.appliedRepairs) ? report.appliedRepairs : [],
     findings: Array.isArray(report.findings) ? report.findings : [],
