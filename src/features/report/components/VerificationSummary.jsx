@@ -30,11 +30,12 @@ export function VerificationSummary({ verification, scoreBefore, scoreAfter }) {
           <Badge status={verification.verificationStatus} />
         </div>
         {counts ? (
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             <Count label="Found" value={counts.found} />
             <Count label="No longer detected" value={counts.fixed} tone="good" />
             <Count label="Remaining" value={counts.remaining} tone={counts.remaining ? 'warn' : ''} />
             <Count label="Needs review" value={counts.needsReview} tone={counts.needsReview ? 'warn' : ''} />
+            <Count label="Skipped" value={counts.skipped || 0} />
           </div>
         ) : (
           <p className="mt-4 text-sm text-muted">

@@ -6,6 +6,8 @@ export function Badge({ children, status, className = '' }) {
     NEEDS_REVIEW: 'bg-warn/10 text-warn ring-warn/20',
     REMAINS: 'bg-danger/10 text-danger ring-danger/20',
     FIXED: 'bg-good/10 text-good ring-good/20',
+    APPROVED: 'bg-good/10 text-good ring-good/20',
+    SKIPPED: 'bg-hover text-muted ring-line',
     PASSED: 'bg-good/10 text-good ring-good/20',
     NOT_APPLICABLE: 'bg-hover text-muted ring-line',
     LEGACY_UNVERIFIED: 'bg-hover text-muted ring-line',
@@ -17,6 +19,8 @@ export function Badge({ children, status, className = '' }) {
     PASSED_SUPPORTED_CHECKS: 'Supported checks passed',
     ISSUES_REMAIN: 'Issues remain',
     NEEDS_REVIEW: 'Needs review',
+    APPROVED: 'Approved',
+    SKIPPED: 'Skipped',
     LEGACY_UNVERIFIED: 'Legacy · unverified',
     NOT_APPLICABLE: 'Not applicable',
   }

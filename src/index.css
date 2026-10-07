@@ -41,7 +41,7 @@
   --color-surface: #121927;
   --color-raised: #182131;
   --color-subtle: #151e2c;
-  --color-hover: #202b3c;
+  --color-hover: hsl(216, 30%, 18%);
   --color-ink: #edf2fb;
   --color-muted: #9aa8bd;
   --color-line: #283549;

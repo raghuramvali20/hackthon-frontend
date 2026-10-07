@@ -69,8 +69,8 @@ export function ReportDetailScreen() {
 
       <Card className="space-y-4 p-5 sm:p-6">
         <div>
-          <h2 className="font-bold">Automatic fixes <span className="font-medium text-muted">({report.appliedFixes.length})</span></h2>
-          <p className="mt-1 text-sm text-muted">Changes applied automatically and confirmed by the supported re-scan.</p>
+          <h2 className="font-bold">Approved repairs <span className="font-medium text-muted">({report.appliedFixes.length})</span></h2>
+          <p className="mt-1 text-sm text-muted">Changes you approved for this run; the output was re-scanned using the supported checks.</p>
         </div>
         <FixesSummaryList fixes={report.appliedFixes} />
       </Card>
@@ -85,6 +85,21 @@ export function ReportDetailScreen() {
               <li className="border-l-2 border-warn/50 pl-4 text-sm" key={`${change.ruleId}-${change.findingIndex}-${index}`}>
                 <p className="font-semibold text-ink">{change.description}</p>
                 <p className="mt-1 text-xs text-muted">{change.ruleId} · {change.attribute}="{change.value}" · human review required</p>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
+      {report.skippedFindings.length > 0 && (
+        <Card className="space-y-3 p-5 sm:p-6">
+          <div>
+            <h2 className="font-bold">Skipped findings ({report.skippedFindings.length})</h2>
+            <p className="mt-1 text-sm text-muted">These items remain in the updated HTML and were not included in the approved repairs.</p>
+          </div>
+          <ul className="space-y-2">
+            {report.skippedFindings.map((finding) => (
+              <li className="text-sm text-ink" key={finding.findingId}>
+                {finding.message} <span className="text-xs text-muted">· {finding.criterion} · {finding.element}</span>
               </li>
             ))}
           </ul>
