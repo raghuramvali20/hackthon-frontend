@@ -1,4 +1,4 @@
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '')
+export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '')
 export const TOKEN_STORAGE_KEY = 'accessibility_engine_token'
 
 export class ApiError extends Error {
@@ -11,6 +11,10 @@ export class ApiError extends Error {
 }
 
 export async function apiRequest(path, options = {}) {
+  if (!API_BASE_URL) {
+    throw new ApiError('VITE_API_BASE_URL is not configured.', 0, null)
+  }
+
   const headers = new Headers(options.headers || {})
   const token = localStorage.getItem(TOKEN_STORAGE_KEY)
 
